@@ -6,6 +6,8 @@ class LinkedPair:
         self.key = key
         self.value = value
         self.next = None
+    def __str__(self):
+        return f"key: {self.key} value: {self.value}, next: {self.next}"
 
 class HashTable:
     '''
@@ -54,9 +56,21 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
-
-
+        
+        # Part 2
+        newEntry = LinkedPair(key, value)
+        if self.storage[self._hash_mod(key)] == None:
+            self.storage[self._hash_mod(key)] = newEntry
+        else:
+            node = self.storage[self._hash_mod(key)]
+            while node:
+                if node.key == key:
+                    node.value = value
+                    break
+                elif node.next == None:
+                    node.next = newEntry
+                    break
+                else: node = node.next
 
     def remove(self, key):
         '''
@@ -66,7 +80,11 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        if self.storage[self._hash_mod(key)] == None:
+            print("Error: Key Not Found")
+        else:
+            self.storage[self._hash_mod(key)] = None
+
 
 
     def retrieve(self, key):
@@ -76,8 +94,18 @@ class HashTable:
         Returns None if the key is not found.
 
         Fill this in.
-        '''
-        pass
+        ''' 
+        
+        def checkNode(node):
+            if node == None:
+                return None
+            elif node.key == key:
+                return node.value
+            else:
+                return checkNode(node.next)
+
+        return checkNode(self.storage[self._hash_mod(key)] )
+
 
 
     def resize(self):
@@ -87,9 +115,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
-
-
+        self.capacity = self.capacity * 2
+        oldStorage = self.storage
+        self.storage = [None] * self.capacity
+        for pair in oldStorage:
+            if pair != None:
+                node = pair
+                while node != None:
+                    self.insert(node.key, node.value)
+                    node = node.next
 
 if __name__ == "__main__":
     ht = HashTable(2)

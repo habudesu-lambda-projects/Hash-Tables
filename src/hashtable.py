@@ -7,7 +7,7 @@ class LinkedPair:
         self.value = value
         self.next = None
     def __str__(self):
-        return f"key: {self.key} value: {self.value}"
+        return f"key: {self.key} value: {self.value}, next: {self.next}"
 
 class HashTable:
     '''
@@ -64,7 +64,6 @@ class HashTable:
         else:
             node = self.storage[self._hash_mod(key)]
             while node:
-                print(node)
                 if node.key == key:
                     node.value = value
                     break
@@ -121,7 +120,10 @@ class HashTable:
         self.storage = [None] * self.capacity
         for pair in oldStorage:
             if pair != None:
-                self.insert(pair.key, pair.value)
+                node = pair
+                while node != None:
+                    self.insert(node.key, node.value)
+                    node = node.next
 
 if __name__ == "__main__":
     ht = HashTable(2)
